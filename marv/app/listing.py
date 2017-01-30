@@ -113,6 +113,7 @@ class ListingManager(object):
         TYPES = {
             'datetime': lambda spec: db.Column(db.DateTime(timezone=True)),
             'filesize': lambda spec: db.Column(db.BigInteger),
+            'float': lambda spec: db.Column(db.Float),
             'string': lambda spec: db.Column(db.String),
             'string[]': generate_relation,
             'subset': generate_relation,

@@ -192,7 +192,7 @@ def marv_node_discard(ctx, all_nodes, all_filesets, update_detail,
             if 'fileset' in node:
                 ctx.fail("Refusing to discard fileset node.\n"
                          "Use 'marv fileset discard' to discard a fileset.")
-            unknown = set(node) - app.site.nodes.nodes.viewkeys()
+            unknown = set(node).difference(app.site.nodes.nodes.viewkeys())
             if unknown:
                 ctx.fail('Unknown nodes %s' % list(sorted(unknown)))
             nodes = node
@@ -245,7 +245,7 @@ def marv_node_run(ctx, all_nodes, all_filesets, changed_config, rerun,
         if 'fileset' in node:
             ctx.fail("Cannot rerun fileset node.\n"
                      "Use 'marv fileset discard|scan' to discard and rescan a fileset.")
-        unknown = set(node) - app.site.nodes.nodes.viewkeys()
+        unknown = set(node).difference(app.site.nodes.nodes.viewkeys())
         if unknown:
             ctx.fail('Unknown nodes: %s' % ', '.join(sorted(unknown)))
         app.site.node_run(nodes=None if all_nodes else node,
