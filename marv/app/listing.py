@@ -198,12 +198,15 @@ class ListingManager(object):
         Listing.query.filter(Listing.uuid == uuid)\
                      .delete(synchronize_session=False)
         listing_json = os.path.join(self.site.aggroot, uuid, 'listing.json')
-        with open(listing_json) as f:
-            listing = Listing.from_dct(
-                getmtime(listing_json),
-                json.load(f, object_pairs_hook=object_pairs_hook2)
-            )
-        db.session.add(listing)
+        try:
+            with open(listing_json) as f:
+                listing = Listing.from_dct(
+                    getmtime(listing_json),
+                    json.load(f, object_pairs_hook=object_pairs_hook2)
+                )
+            db.session.add(listing)
+        except:
+            LOG.info('Discarding deleted listing %s', uuid)
         db.session.commit()
         LOG.debug('done')
 

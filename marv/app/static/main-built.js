@@ -90,9 +90,6 @@ function _asyncToGenerator(fn){return function(){var gen=fn.apply(this,arguments
 
             <nav class="navbar navbar-inverted footer">
                 <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="https://ternaris.com" target=_blank><img src="app/styles/ternaris-weiss.svg" width=100></a>
-                    </div>
                     <div class="navbar-collapse">
                     <p class="navbar-text">
                         <ul class="list-inline">
