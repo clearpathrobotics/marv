@@ -135,7 +135,8 @@ class Mapping(collections.Mapping, Mixin):
         try:
             return self._dct.__getitem__(name)
         except KeyError:
-            raise AttributeError(name)
+            log.debug('Attribute does not exist')
+            return None
 
     def get(self, key, default=None):
         return self._dct.get(key, default)
