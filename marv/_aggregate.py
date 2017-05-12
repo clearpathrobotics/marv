@@ -189,8 +189,12 @@ class Aggregate(collections.Mapping, Mixin):
         if key != 'meta' and not self.meta[key].has_output:
             return None
         node_json = os.path.join(self.path, '{}.json'.format(key))
-        with open(node_json) as f:
-            return json_load_agg(f)
+        try:
+            with open(node_json) as f:
+                return json_load_agg(f)
+        except IOError:
+            log.warn('File not found: %s', node_json)
+            return None
 
     def __iter__(self):
         return iter(self.meta)
