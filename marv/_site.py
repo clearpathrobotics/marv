@@ -38,7 +38,7 @@ from configparser import ConfigParser
 from ._aggregate import Aggregate, enc_default
 from ._detail import Detail, parse_listing_columns
 from ._detail import Keyval
-from ._model import Fileset, db
+from ._model import Fileset, File, db
 from ._scan import ScanContext
 from ._node import DAG
 from ._utils import render_default
@@ -196,6 +196,17 @@ class Site(object):
         ctx = ScanContext(self.aggroot, self.scanroot, self.settype, self.settypename,
                           self.render_listing, self.render_detail)
         ctx.scan()
+
+        for info in ctx.files_removed:
+            relpath = info.path[len(self.scanroot)+1:]
+            dbfile = File.query.filter(File.relpath == relpath).first()
+            if not dbfile:
+                LOG.warn("Could not find removed file %s in database", relpath)
+                continue
+            fileset = dbfile.fileset
+            LOG.debug("Removing fileset %s:", fileset.uuid)
+            self.remove_fileset(fileset.uuid);
+
         return ctx
 
     def render_detail(self, agg):

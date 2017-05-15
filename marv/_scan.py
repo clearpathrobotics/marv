@@ -48,6 +48,7 @@ class ScanContext(object):
         self.files_found = None
         self.files_modified = None
         self.files_new = None
+        self.files_removed = None
         self.render_listing = render_listing
         self.render_detail = render_detail
 
@@ -104,6 +105,13 @@ class ScanContext(object):
         new_or_modified = existing - known.viewkeys()
         new_fileinfos = {x for x in new_or_modified if x.path not in known_paths}
         modified = new_or_modified - new_fileinfos
+
+        # Removed
+        removed = known.viewkeys() - existing
+        existing_paths = {x.path for x in existing}
+        removed_fileinfos = {x for x in removed if x.path not in existing_paths}
+
+
         if modified:
             LOG.warn('Ignoring changed mtime of files for now')
         # for info in modified:
@@ -122,6 +130,7 @@ class ScanContext(object):
         self.files_found = existing
         self.files_modified = modified
         self.files_new = new_fileinfos
+        self.files_removed = removed_fileinfos
         self.pop()
 
     # Context API
