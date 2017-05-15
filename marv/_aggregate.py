@@ -192,8 +192,8 @@ class Aggregate(collections.Mapping, Mixin):
         try:
             with open(node_json) as f:
                 return json_load_agg(f)
-        except IOError:
-            log.warn('File not found: %s', node_json)
+        except IOError as ioex:
+            log.warn('File not found: %s, %s', node_json, ioex.strerror)
             return None
 
     def __iter__(self):

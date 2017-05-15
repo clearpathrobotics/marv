@@ -199,11 +199,11 @@ class Site(object):
 
         for info in ctx.files_removed:
             relpath = info.path[len(self.scanroot)+1:]
-            file = File.query.filter(File.relpath == relpath).first()
-            if not file:
+            dbfile = File.query.filter(File.relpath == relpath).first()
+            if not dbfile:
                 LOG.warn("Could not find removed file %s in database", relpath)
                 continue
-            fileset = file.fileset
+            fileset = dbfile.fileset
             LOG.debug("Removing fileset %s:", fileset.uuid)
             self.remove_fileset(fileset.uuid);
 
