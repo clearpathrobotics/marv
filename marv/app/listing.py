@@ -259,8 +259,8 @@ def init_app(app, url_prefix):
         query = Listing.query
         if not filters:
             #Only show recent stuff if no filter is given
-            time = datetime.today() - timedelta(days=2)
-            date = time.strftime("%Y-%m-%dT00:00:00-04:00");
+            time = datetime.utcnow() - timedelta(days=2)
+            date = time.strftime("%Y-%m-%dT00:00:00-00:00");
             filters['start_time'] = {'val' : date, 'op' : 'gt'}
 
         for k, v in filters.iteritems():
