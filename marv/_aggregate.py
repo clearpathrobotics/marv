@@ -195,6 +195,9 @@ class Aggregate(collections.Mapping, Mixin):
         except IOError as ioex:
             log.warn('File not found: %s, %s', node_json, ioex.strerror)
             return None
+        except ValueError as err:
+            log.warn('Json file %s has invalid data: %s', node_json, err)
+            return None
 
     def __iter__(self):
         return iter(self.meta)

@@ -267,8 +267,8 @@ class Site(object):
             try:
                 conn = Client(self.socket, authkey=self.authkey)
                 conn.send(None)
-            except IOError:
-                LOG.debug('Server unavailable, disabling notifications')
+            except IOError as e:
+                LOG.debug('Server unavailable, disabling notifications. Error: %s', str(e))
                 self.server_available = False
             else:
                 self.server_available = True
