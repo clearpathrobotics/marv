@@ -9449,7 +9449,7 @@ a.link-default.disabled:hover {
 }
 
 .main .widget-img {
-  max-height: calc(100vh - 280px);
+  max-height: 80vh;
 }
 
 .main .inline-block {
