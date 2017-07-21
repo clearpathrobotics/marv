@@ -29,6 +29,7 @@ from glob import glob
 from multiprocessing.connection import AuthenticationError, Listener
 from os.path import getmtime
 from threading import Thread
+from datetime import datetime, timedelta
 
 import flask
 import flask_restless
@@ -155,7 +156,12 @@ class ListingManager(object):
 
     def listen(self):
         LOG.info('listening on %s', self.site.socket)
-        listener = Listener(self.site.socket, authkey=self.site.authkey)
+        try:
+            listener = Listener(self.site.socket, authkey=self.site.authkey)
+        except IOError as e:
+            LOG.warn('Could not setup listener: %s', str(e))
+            return
+
         while True:
             try:
                 conn = listener.accept()
@@ -251,6 +257,12 @@ def init_app(app, url_prefix):
 
         site = current_app.site
         query = Listing.query
+        if not filters:
+            #Only show recent stuff if no filter is given
+            time = datetime.utcnow() - timedelta(days=2)
+            date = time.strftime("%Y-%m-%dT00:00:00-00:00");
+            filters['start_time'] = {'val' : date, 'op' : 'gt'}
+
         for k, v in filters.iteritems():
             spec = site.filter_specs[k]
             col = getattr(Listing, k)
@@ -299,6 +311,7 @@ def init_app(app, url_prefix):
                                value, query)
             else:
                 flask.abort(400)
+
         rows = [json.loads(x.json) for x in query]
         listing_columns = site.listing_columns
 
